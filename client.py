@@ -77,6 +77,7 @@ class SeedreamClient:
         
         self.base_url = base_url
         self.proxy = proxy
+        self._model = "5.0-lite"  # 默认模型
         
         # 创建客户端
         client_kwargs = {
@@ -137,6 +138,7 @@ class SeedreamClient:
             GenerationResponse: 包含生成结果的响应对象
         """
         model = self._get_model_id(model)
+        self._model = model  # 保存模型别名用于后续判断
         
         # 构建请求参数
         params = {
@@ -151,8 +153,8 @@ class SeedreamClient:
         if image:
             params["image"] = image
 
-        # 添加 output_format (仅 5.0 lite 支持)
-        if output_format:
+        # 添加 output_format (仅 5.0 lite 支持 png)
+        if output_format and self._model in ("5.0-lite", "doubao-seedream-5-0-260128"):
             params["output_format"] = output_format
 
         # 添加 response_format
